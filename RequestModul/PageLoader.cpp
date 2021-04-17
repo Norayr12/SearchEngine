@@ -45,6 +45,7 @@ int main()
 {
     PageLoader request;
     Page response = request.Load("https://ru.wikipedia.org/wiki/Заглавная_страница");
+
     //std::cout << "Response status: " << response.GetStatus() << "\nResponse body: " << response.GetBody();
     std::vector<std::string> links, documents;
 
