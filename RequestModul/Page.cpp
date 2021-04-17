@@ -1,4 +1,3 @@
-#include <iostream>
 #include "Page.hpp"
 
 Page::Page(std::string body, int status) : body{body}, status{status} {}

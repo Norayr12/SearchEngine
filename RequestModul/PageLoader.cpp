@@ -1,6 +1,6 @@
 #include "PageLoader.hpp"
 #include "Page.cpp"
-#include "HTMLParser.cpp"
+#include "../Parser/HTMLParser.cpp"
 
 std::string res;
 
@@ -59,5 +59,6 @@ int main()
     std::cout << "DOCUMENTS:";
     for(int i = 0; i < documents.size(); ++i)
         std::cout << documents[i];
+
     gumbo_destroy_output(&kGumboDefaultOptions, output);
 }
