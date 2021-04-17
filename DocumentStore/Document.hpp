@@ -11,6 +11,7 @@ private:
     // Title of document from page
     std::string title;
 
+
     // Body text
     std::string body;
 
