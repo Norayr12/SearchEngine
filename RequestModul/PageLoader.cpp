@@ -1,6 +1,6 @@
 #include "PageLoader.hpp"
-#include "Page.cpp"
-#include "../Parser/HTMLParser.cpp"
+#include "Page.hpp"
+#include "../Parser/HTMLParser.hpp"
 
 std::string res;
 
