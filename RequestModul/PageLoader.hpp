@@ -10,8 +10,10 @@
 class PageLoader {
 public:
     
+    // Default constructor
     PageLoader();
   
+    // Get PAGE instance by URI
     Page Load(const std::string& url);
 };
 #endif

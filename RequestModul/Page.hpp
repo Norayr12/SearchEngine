@@ -7,15 +7,28 @@
 
 class Page {
 private:
+
+    // Body of Page: all text
     std::string body;
+
+    // Returned status after loading : ( #404 )
     int status;
 
 public:
+
+    // Default constructor
     Page();
+
+    // Constructor with params
     Page(std::string body, int status);
+
+    // Check if loading crashed
     int IsError() const;
+
+    // Getters
     int GetStatus() const;
     const std::string& GetBody() const;
+    //
 };
 
 #endif
