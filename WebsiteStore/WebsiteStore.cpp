@@ -1,10 +1,13 @@
+#include <iostream>
 #include "WebsiteStore.hpp"
 
+// Default constructor
 WebsiteStore::WebsiteStore()
 {
     this->AddNew(Website("rau.am", "https://rau.am/", 0));
 }
 
+// All websites getter
 std::vector<Website> WebsiteStore::GetAll() const
 {
     std::vector<Website> websites;
@@ -12,14 +15,18 @@ std::vector<Website> WebsiteStore::GetAll() const
     {
         websites.push_back((*it).second);
     }
+    
+    return websites;
 }
 
+// Adds new website
 void WebsiteStore::AddNew(const Website& website)
 {
-    all.insert({ (website.GetHomepage(), website) });
+    all.insert({ website.GetHomepage(), website });
 }
 
-void WebsiteStore::Update(const Webstite& website)
+// Updates the website info
+void WebsiteStore::Update(const Website& website)
 {
-    all[website.GetURL()] = website;
+    all[website.GetHomepage()] = website;
 }

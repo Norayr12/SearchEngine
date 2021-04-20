@@ -28,9 +28,9 @@ public:
     Link(const std::string& url, const std::string& domain, const LinkStatus status, const time_t lastLoadTime);
     
     // Getters of fields
-    std::string GetURL() const;
+    const std::string& GetURL() const;
 
-    std::string GetDomain() const;
+    const std::string& GetDomain() const;
 
     LinkStatus GetStatus() const;
 
@@ -39,6 +39,7 @@ public:
 
     // == operator overloading by URL
     friend bool operator==(const Link& a, const Link& b);
+
 };
 
-#endif Link_hpp
+#endif //Link_hpp

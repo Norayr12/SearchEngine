@@ -1,34 +1,39 @@
 #include "Link.hpp"
 
+// Default constructor
 Link::Link()
 {
-    url = nullptr;
+    url = "";
 }
 
+// Constructor with params
 Link::Link(const std::string& url, const std::string& domain, const LinkStatus status, const time_t lastLoadTime) :
     url { url }, domain { domain }, status { status }, lastLoadTime { lastLoadTime }
 {}
 
-std::string Link::GetDomain() const
+// Getters
+const std::string& Link::GetDomain() const
 {
-    return domain;
+    return this->domain;
 }
 
-std::string Link::GetURL() const
+const std::string& Link::GetURL() const
 {
-    return url;
+    return this->url;
 }
 
 LinkStatus Link::GetStatus() const
 {
-    return status;
+    return this->status;
 }
 
 time_t Link::GetLastLoadTime() const
 {
-    return lastLoadTime;
+    return this->lastLoadTime;
 }
+//
 
+// "==" operator overloading
 bool operator== (const Link& left, const Link& right)
 {
     return left.GetURL() == right.GetURL();

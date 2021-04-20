@@ -6,7 +6,7 @@ enum class LinkStatus
     WAITING,
     LOADED,
     ERROR
-}
+};
 
 
-#endif LinkStatus_hpp
+#endif //LinkStatus_hpp

@@ -8,11 +8,17 @@ class Document
 
 private:
 
+    // Document url
+    std::string url;
+
     // Title of document from page
     std::string title;
 
-    // Body text
-    std::string body;
+    // All text
+    std::string allText;
+
+    // Description of page
+    std::string description;
 
 public:
 
@@ -20,12 +26,14 @@ public:
     Document();
 
     // Constructor with params
-    Document(const std::string& title, const std::string& body); 
+    Document(const std::string& url, const std::string& title, const std::string& allText, const std::string& description); 
 
     // Getters of fields
-    std::string GetTitle();
-    std::string GetBody();
+    const std::string& GetURL() const;
+    const std::string& GetTitle() const;
+    const std::string& GetAllText() const;
+    const std::string& GetDescription() const;
     //
 };
 
-#endif Document_hpp
+#endif //Document_hpp

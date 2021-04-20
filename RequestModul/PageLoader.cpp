@@ -1,6 +1,5 @@
 #include "PageLoader.hpp"
 #include "Page.hpp"
-#include "../Parser/HTMLParser.hpp"
 
 std::string res;
 
@@ -40,7 +39,7 @@ Page PageLoader::Load(const std::string& url)
     curl_easy_cleanup(curl);  
     return Page(res, responseCode);
 }
-
+/*
 int main()
 {
     PageLoader request;
@@ -63,3 +62,4 @@ int main()
 
     gumbo_destroy_output(&kGumboDefaultOptions, output);
 }
+*/

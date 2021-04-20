@@ -26,11 +26,11 @@ public:
     Website(const std::string& domain, const std::string& homepageUrl, const time_t lastCrawlingTime);
 
     // Getters of fields
-    std::string GetDomain();
-    std::string GetHomepage();
-    time_t GetLastCrawlingTime();
+    const std::string& GetDomain() const;
+    const std::string& GetHomepage() const;
+    const time_t& GetLastCrawlingTime() const;
 
 };
 
 
-#endif Website_hpp
+#endif //Website_hpp
