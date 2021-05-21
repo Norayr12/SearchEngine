@@ -5,7 +5,7 @@
 // Default constructor
 LinkStore::LinkStore()
 {
-    this->AddLink(Link("https://rau.am/", "rau.am", LinkStatus::WAITING, 0));
+
 }
 
 // Getter of "allLinks"
@@ -15,16 +15,14 @@ std::vector<Link> LinkStore::GetAllLinks() const
 }
 
 // Returns link by url
-Link LinkStore::GetByUrl(const std::string& url)
+std::optional<Link> LinkStore::GetByUrl(const std::string& url)
 {
-    
-    for(int i = 0; i < allLinks.size(); ++i)
-    {
-        if(allLinks[i].GetURL() == url)
-            return allLinks[i];
+    for (const auto& link : allLinks) {
+        if (link.GetURL() == url) {
+            return link;
+        }
     }
-    
-    return Link();
+    return {};
 }
 
 // Returns vector<Link> vec(size) by domain and status
@@ -32,15 +30,14 @@ std::vector<Link> LinkStore::GetBy(const std::string& domain, LinkStatus status,
 {
     std::vector<Link> links;
 
-    for(int i = 0; i < size; ++i)
+    for (int i = 0; i < allLinks.size(); ++i)
     {
-        for(int j = 0; j < allLinks.size(); ++i)
+        if(size == 0)
+            break;
+        if(allLinks[i].GetStatus() == status)
         {
-            if(allLinks[j].GetDomain() == domain && allLinks[j].GetStatus() == status)
-            {
-                links.push_back(allLinks[j]);
-                break;
-            }
+            links.push_back(allLinks[i]);
+            --size;
         }
     }
 
@@ -59,20 +56,30 @@ bool LinkStore::ContainsLink(const std::string& link)
     return false;
 }
 
-// Adds new link to "allLinks"
-void LinkStore::AddLink(const Link& link)
-{   
-    if(!ContainsLink(link.GetURL()))
-        allLinks.push_back(link);
+// Returns true if ALL LINKS IS LOADED
+bool LinkStore::AllLoaded()
+{
+    for (const auto& link : allLinks)
+    {
+        if(link.GetStatus() == LinkStatus::WAITING)
+            return false;
+    }
+    return true;
 }
 
-// Updates the info of link
-void LinkStore::Update(const Link& link)
+
+// Adds / updates new link to "allLinks"
+void LinkStore::Save(const Link& link)
 {
-    for(auto it = allLinks.begin(); it != allLinks.end(); ++it)
+    for(int i = 0; i < allLinks.size(); ++i)
     {
-        if((*it).GetURL() == link.GetURL())
-            *it = link;    
+        if(allLinks[i].GetURL() == link.GetURL())
+        {
+            allLinks[i] = link;
+            return;
+        }
     }
+
+    allLinks.push_back(link);
 }
 

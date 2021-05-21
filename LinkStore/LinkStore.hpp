@@ -19,24 +19,19 @@ public:
     LinkStore();
 
     // Get link by params
-    Link GetByUrl(const std::string& url);
+    std::optional<Link> GetByUrl(const std::string& url);
     std::vector<Link> GetBy(const std::string& domain, LinkStatus status, std::size_t size);
 
-    // Add new link to 'allLinks' collection
-    void AddLink(const Link& link);
-
-    // Update the information about link in 'allLinks'
-    void Update(const Link& link);
-
-    // Delete link from 'allLinks' collection
-    void DeleteLink(Link& link);
+    // Adds / updates new link to 'allLinks' collection
+    void Save (const Link& link);
 
     // Check if LINK contains in all list
-    bool ContainsLink(const std::string& link); 
+    bool ContainsLink(const std::string& link);
+    
+    // Check if ALL LINKS IS LOADED
+    bool AllLoaded();
 
     // All links getter
     std::vector<Link> GetAllLinks() const;
 };
-
-
-#endif //LinkStore_hpp
+#endif

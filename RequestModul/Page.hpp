@@ -22,9 +22,6 @@ public:
     // Constructor with params
     Page(std::string body, int status);
 
-    // Check if loading crashed
-    int IsError() const;
-
     // Getters
     int GetStatus() const;
     const std::string& GetBody() const;

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <ctime>
 #include <string>
 #include <vector>
 #include "WebsiteStore/WebsiteStore.hpp"
@@ -22,24 +23,22 @@ int main()
     for(const auto& website : websites)
     {
         
-        std::cout << website.GetHomepage();
-        
         const auto& homepageLink = linkStore.GetByUrl(website.GetHomepage());
         
-        if(homepageLink.GetURL() != "")
+        if(homepageLink.has_value())
         {
-            linkStore.Update(Link(website.GetHomepage(), website.GetDomain(), LinkStatus::WAITING, homepageLink.GetLastLoadTime()));
+            linkStore.Save(Link(website.GetHomepage(), website.GetDomain(), LinkStatus::WAITING, homepageLink.value().GetLastLoadTime()));
         }
         else
         {
-            linkStore.AddLink(Link(website.GetHomepage(), website.GetDomain(), LinkStatus::WAITING, 0));
+            linkStore.Save(Link(website.GetHomepage(), website.GetDomain(), LinkStatus::WAITING, 0));
         }
         
         while(true)
         {
             const auto& links = linkStore.GetBy(website.GetDomain(), LinkStatus::WAITING, 10);
-            std::cout << links.size();
-            if(links.empty())
+
+            if(linkStore.AllLoaded())
                 break;
 
 
@@ -47,41 +46,40 @@ int main()
             {
                 Page page = pageLoader.Load(link.GetURL());
 
-                if(page.IsError() || page.GetStatus() < 200 || page.GetStatus() >= 300)
+                if(page.GetStatus() < 200 || page.GetStatus() >= 300)
                 {                    
-                    linkStore.Update(Link(link.GetURL(), link.GetDomain(), LinkStatus::ERROR, time(nullptr)));
+                    linkStore.Save(Link(link.GetURL(), link.GetDomain(), LinkStatus::ERROR, time(nullptr)));
                     continue;
                 }
 
-                GumboOutput* output = gumbo_parse(page.GetBody().c_str());
-                Document document = HTMLParser::GetDocument(output->root);
-                documentStore.AddNewDocument(document);
-
-                std::vector<std::string> extractedLinks;
-                HTMLParser::SearchLinks(output->root, extractedLinks);
-                gumbo_destroy_output(&kGumboDefaultOptions, output);
-
-                for(int i = 0; i < extractedLinks.size(); ++i)
+                Parser parser(link.GetURL(), page.GetBody());
+                parser.Parse();
+                
+                for (const std::string& u : parser.GetUrls())
                 {
-                   // std::cout << extractedLinks[i] << "\n";
+                    std::cout << u << std::endl;
                 }
 
-                for(int i = 0; i < extractedLinks.size(); ++i)
+                //documentStore.AddNewDocument(Document(link.GetURL(), parser.getTitle(), parser.getDescription(), parser.getAllText()));
+                //std::cout << "\n Document adds: Size - " << documentStore.GetAllDocuments().size() << "\n";
+                for (const auto& newUrl : parser.GetUrls())
                 {
-                    if(linkStore.ContainsLink(extractedLinks[i]))                   
-                        continue;  
+                    if (linkStore.GetByUrl(newUrl).has_value())
+                    {
+                        continue;
+                    }
 
-                     
-                    linkStore.AddLink(Link(extractedLinks[i], link.GetDomain(), LinkStatus::WAITING, time(nullptr)));
+                    linkStore.Save(Link(newUrl, link.GetDomain(), LinkStatus::WAITING, time(nullptr)));
                 }
     
-                linkStore.Update(Link(link.GetURL(), link.GetDomain(), LinkStatus::LOADED, time(nullptr)));
+                linkStore.Save(Link(link.GetURL(), link.GetDomain(), LinkStatus::LOADED, time(nullptr)));
 
-                //std::cout << "DOCUMENTS: " << (documentStore.GetAllDocuments()).size();
+
+                std::cout << "\n LINKSTORE SIZE - " << linkStore.GetAllLinks().size() << "\n";
             }
         }
-        
         websiteStore.Update(Website(website.GetDomain(), website.GetHomepage(), time(NULL)));
     }
-    return 0;
+
+    std::cout << "\n\n END\n";
 }
