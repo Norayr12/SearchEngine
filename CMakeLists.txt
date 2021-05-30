@@ -30,7 +30,7 @@ set_target_properties(LinkStore PROPERTIES
         )
 
 set_target_properties(WebsiteStore PROPERTIES
-        IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/WebsiteStore/WebsiteStore.so"
+        IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/WebsiteStore/libWebsiteStore.so"
         )
 
 set_target_properties(DocumentStore PROPERTIES

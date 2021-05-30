@@ -1,1 +1,0 @@
-/usr/bin/c++ -fPIC   -shared -Wl,-soname,libWebsiteStore.so -o libWebsiteStore.so CMakeFiles/WebsiteStore.dir/Website.cpp.o CMakeFiles/WebsiteStore.dir/WebsiteStore.cpp.o 
