@@ -1,0 +1,1 @@
+/usr/bin/c++ -fPIC   -shared -Wl,-soname,libLinkStore.so -o libLinkStore.so CMakeFiles/LinkStore.dir/Link.cpp.o CMakeFiles/LinkStore.dir/LinkStore.cpp.o 

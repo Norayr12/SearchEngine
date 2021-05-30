@@ -1,0 +1,1 @@
+/usr/bin/c++ -fPIC   -shared -Wl,-soname,libDocumentStore.so -o libDocumentStore.so CMakeFiles/DocumentStore.dir/Document.cpp.o CMakeFiles/DocumentStore.dir/DocumentStore.cpp.o 

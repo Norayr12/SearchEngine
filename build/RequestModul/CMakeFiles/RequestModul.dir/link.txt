@@ -1,0 +1,1 @@
+/usr/bin/c++ -fPIC   -shared -Wl,-soname,libRequestModul.so -o libRequestModul.so CMakeFiles/RequestModul.dir/Page.cpp.o CMakeFiles/RequestModul.dir/PageLoader.cpp.o  -lcurl 

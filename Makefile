@@ -1,2 +1,0 @@
-all:
-	g++ Crawler.cpp RequestModul/PageLoader.cpp LinkStore/Link.cpp LinkStore/LinkStore.cpp Parser/HTMLParser.cpp RequestModul/Page.cpp WebsiteStore/Website.cpp WebsiteStore/WebsiteStore.cpp DocumentStore/DocumentStore.cpp DocumentStore/Document.cpp -o Result -lcurl -lgumbo -std=c++17

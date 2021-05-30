@@ -10,16 +10,13 @@
 
 int main()
 {
-    
     WebsiteStore websiteStore;
     DocumentStore documentStore;
     LinkStore linkStore;
     PageLoader pageLoader;
     
-    
     const auto& websites = websiteStore.GetAll();
-    // size == 1 (OK)
-    
+
     for(const auto& website : websites)
     {
         
@@ -40,7 +37,6 @@ int main()
 
             if(linkStore.AllLoaded())
                 break;
-
 
             for(const auto& link : links)
             {
