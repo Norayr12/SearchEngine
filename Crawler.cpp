@@ -10,29 +10,30 @@
 
 int main()
 {
+    std::ios_base::sync_with_stdio(false);
+    std::cout.tie();
+    std::cout << "clown\n";
+
     WebsiteStore websiteStore;
-    DocumentStore documentStore;
+    //DocumentStore documentStore;
     LinkStore linkStore;
     PageLoader pageLoader;
-    
+
     const auto& websites = websiteStore.GetAll();
 
     for(const auto& website : websites)
     {
-        
+
         const auto& homepageLink = linkStore.GetByUrl(website.GetHomepage());
         
         if(homepageLink.has_value())
-        {
             linkStore.Save(Link(website.GetHomepage(), website.GetDomain(), LinkStatus::WAITING, homepageLink.value().GetLastLoadTime()));
-        }
         else
-        {
             linkStore.Save(Link(website.GetHomepage(), website.GetDomain(), LinkStatus::WAITING, 0));
-        }
-        
+
         while(true)
         {
+
             const auto& links = linkStore.GetBy(website.GetDomain(), LinkStatus::WAITING, 10);
 
             if(linkStore.AllLoaded())
@@ -71,11 +72,14 @@ int main()
                 linkStore.Save(Link(link.GetURL(), link.GetDomain(), LinkStatus::LOADED, time(nullptr)));
 
 
-                std::cout << "\n LINKSTORE SIZE - " << linkStore.GetAllLinks().size() << "\n";
+                //std::cout << "\n LINKSTORE SIZE - " << linkStore.GetAllLinks().size() << "\n";
+
             }
         }
         websiteStore.Update(Website(website.GetDomain(), website.GetHomepage(), time(NULL)));
+
     }
 
     std::cout << "\n\n END\n";
+    return 0;
 }

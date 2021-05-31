@@ -4,7 +4,45 @@
 // Default constructor
 WebsiteStore::WebsiteStore()
 {
-    this->AddNew(Website("rau.am", "https://rau.am/", 0));
+
+    sql::Driver* driver;
+    sql::Connection* connection;
+    sql::Statement* statement;
+    sql::ResultSet* resultSet;
+
+    std::string host = "tcp://127.0.0.1:3306";
+    std::string username = "root";
+    std::string password = "Norik262220";
+
+    try
+    {
+        driver = get_driver_instance();
+        connection = driver->connect(host, username, password);
+        connection->setSchema("Crawler");
+        statement = connection->createStatement();
+
+        resultSet = statement->executeQuery("SELECT * FROM Crawler.Websites;");
+        sql::ResultSetMetaData* md = resultSet->getMetaData();
+
+        while(resultSet->next())
+        {
+            std::string domain, url;
+            uint32_t lastCrawlingTime;
+            domain = resultSet->getString("domain");
+            url = resultSet->getString("homepage");
+
+            // TODO: CHANGE THIS TO SECONDS ,CAUSE NOW IT IS YEAR OF LAST UPDATE
+            lastCrawlingTime = resultSet->getUInt("lastCrawlingTime");
+            std::cout << std::endl << resultSet->getInt(1) << " " << domain << " " << url << " " << lastCrawlingTime << std::endl;
+            this->AddNew(Website(domain, url, lastCrawlingTime));
+        }
+        statement->executeQuery("UPDATE Crawler.text SET domain = 'changed' WHERE url = 'res'");
+    }
+    catch (sql::SQLException& e)
+    {
+        std::cout << e.what() << std::endl;
+    }
+
 }
 
 // All websites getter
