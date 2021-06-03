@@ -22,7 +22,7 @@ int main()
 
     const auto& websites = websiteStore.GetAll();
 
-    for(const auto& website : websites)
+    for(const auto& website : websites)https://github.com/Norayr12/SearchEngine.git
     {
 
         const auto& homepageLink = linkStore.GetByUrl(website.GetHomepage());
