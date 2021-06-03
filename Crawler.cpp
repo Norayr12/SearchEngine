@@ -2,6 +2,7 @@
 #include <ctime>
 #include <string>
 #include <vector>
+#include "DBConnector/DBConnector.hpp"
 #include "WebsiteStore/WebsiteStore.hpp"
 #include "LinkStore/LinkStore.hpp"
 #include "DocumentStore/DocumentStore.hpp"
@@ -12,10 +13,10 @@ int main()
 {
     std::ios_base::sync_with_stdio(false);
     std::cout.tie();
-    std::cout << "clown\n";
 
+    DBConnector::Init("tcp://127.0.0.1:3306", "root", "Norik262220");
     WebsiteStore websiteStore;
-    //DocumentStore documentStore;
+    DocumentStore documentStore;
     LinkStore linkStore;
     PageLoader pageLoader;
 
@@ -57,27 +58,22 @@ int main()
                     std::cout << u << std::endl;
                 }
 
-                //documentStore.AddNewDocument(Document(link.GetURL(), parser.getTitle(), parser.getDescription(), parser.getAllText()));
-                //std::cout << "\n Document adds: Size - " << documentStore.GetAllDocuments().size() << "\n";
+                std::cout << "DATA: " + parser.GetAllText();
+                Document document(link.GetURL(), parser.GetTitle(), parser.GetAllText(), parser.GetDescription());
+                documentStore.AddNewDocument(document);
                 for (const auto& newUrl : parser.GetUrls())
                 {
                     if (linkStore.GetByUrl(newUrl).has_value())
-                    {
                         continue;
-                    }
 
                     linkStore.Save(Link(newUrl, link.GetDomain(), LinkStatus::WAITING, time(nullptr)));
                 }
     
                 linkStore.Save(Link(link.GetURL(), link.GetDomain(), LinkStatus::LOADED, time(nullptr)));
-
-
-                //std::cout << "\n LINKSTORE SIZE - " << linkStore.GetAllLinks().size() << "\n";
-
             }
         }
-        websiteStore.Update(Website(website.GetDomain(), website.GetHomepage(), time(NULL)));
 
+        websiteStore.Update(Website(website.GetDomain(), website.GetHomepage(), time(NULL)));
     }
 
     std::cout << "\n\n END\n";

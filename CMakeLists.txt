@@ -8,6 +8,7 @@ include_directories("Parser")
 include_directories("LinkStore")
 include_directories("WebsiteStore")
 include_directories("DocumentStore")
+include_directories("DBConnector")
 
 add_executable(${PROJECT_NAME} Crawler.cpp)
 
@@ -16,6 +17,7 @@ add_subdirectory(Parser)
 add_subdirectory(LinkStore)
 add_subdirectory(WebsiteStore)
 add_subdirectory(DocumentStore)
+add_subdirectory(DBConnector)
 
 set_target_properties(RequestModul PROPERTIES
         IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/RequestModul/libRequestModul.so"
@@ -37,4 +39,8 @@ set_target_properties(DocumentStore PROPERTIES
         IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/DocumentStore/libDocumentStore.so"
         )
 
-target_link_libraries(${PROJECT_NAME} RequestModul Parser LinkStore WebsiteStore DocumentStore)
+set_target_properties(DBConnector PROPERTIES
+        IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/DBConnector/libDBConnector.so"
+    )
+
+target_link_libraries(${PROJECT_NAME} RequestModul Parser LinkStore WebsiteStore DocumentStore DBConnector)

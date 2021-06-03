@@ -4,31 +4,33 @@
 DocumentStore::DocumentStore()
 {}
 
-// Getter
-std::vector<Document> DocumentStore::GetAllDocuments()
-{
-    std::vector<Document> documents;
-    
-    for(auto it = docs.begin(); it != docs.end(); ++it)
-    {
-        documents.push_back((*it).second);
-    }
-
-    return documents;
-}
-
 // Returns DOCUMENT by title
 Document DocumentStore::GetByTitle(const std::string& title)
 {
-    for(int i = 0; i < docs.size(); ++i)
-    {
-        
-    }
     return Document();
 }
 
 // Adds new document to "docs"
-void DocumentStore::AddNewDocument(const Document& document)
+void DocumentStore::AddNewDocument(Document document)
 {
-    docs.insert( { document.GetURL(), document } );
+    std::string url = document.GetURL();
+    std::string title = document.GetTitle();
+    std::string data = document.GetAllText();
+    std::string description = document.GetDescription();
+
+    std::string updateQuery = "UPDATE Crawler.Data SET title = '" + title + "', data = '" + data + "', description = '" + description + "' WHERE url = '" + url + "'";
+    try
+    {
+        DBConnector::ExecuteQuery("INSERT INTO Crawler.Data values ( '" + url + "', '" + title + "', '" + data + "', '" + description + "' )");
+    }
+    catch (sql::SQLException& e)
+    {
+        if(e.getErrorCode() == 1062 || e.getErrorCode() == 1061)
+            DBConnector::ExecuteQuery(updateQuery);
+        else
+        {
+
+        }
+            //std::cout << e.what() << "\n";
+    }
 }

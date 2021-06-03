@@ -10,4 +10,4 @@ add_library(
         WebsiteStore.cpp
 )
 
-target_link_libraries(WebsiteStore -lmysqlcppconn)
+target_link_libraries(WebsiteStore)

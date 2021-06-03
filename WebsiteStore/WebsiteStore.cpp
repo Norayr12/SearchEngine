@@ -4,45 +4,19 @@
 // Default constructor
 WebsiteStore::WebsiteStore()
 {
+    sql::ResultSet* resultSet = DBConnector::ExecuteQuery("SELECT * FROM Crawler.Websites;");
 
-    sql::Driver* driver;
-    sql::Connection* connection;
-    sql::Statement* statement;
-    sql::ResultSet* resultSet;
-
-    std::string host = "tcp://127.0.0.1:3306";
-    std::string username = "root";
-    std::string password = "Norik262220";
-
-    try
+    while(resultSet->next())
     {
-        driver = get_driver_instance();
-        connection = driver->connect(host, username, password);
-        connection->setSchema("Crawler");
-        statement = connection->createStatement();
+        std::string domain = resultSet->getString("domain");
+        std::string url = resultSet->getString("homepage");
 
-        resultSet = statement->executeQuery("SELECT * FROM Crawler.Websites;");
-        sql::ResultSetMetaData* md = resultSet->getMetaData();
-
-        while(resultSet->next())
-        {
-            std::string domain, url;
-            uint32_t lastCrawlingTime;
-            domain = resultSet->getString("domain");
-            url = resultSet->getString("homepage");
-
-            // TODO: CHANGE THIS TO SECONDS ,CAUSE NOW IT IS YEAR OF LAST UPDATE
-            lastCrawlingTime = resultSet->getUInt("lastCrawlingTime");
-            std::cout << std::endl << resultSet->getInt(1) << " " << domain << " " << url << " " << lastCrawlingTime << std::endl;
-            this->AddNew(Website(domain, url, lastCrawlingTime));
-        }
-        statement->executeQuery("UPDATE Crawler.text SET domain = 'changed' WHERE url = 'res'");
+        // TODO: CHANGE THIS TO SECONDS ,CAUSE NOW IT IS YEAR OF LAST UPDATE
+        uint32_t lastCrawlingTime;
+        lastCrawlingTime = resultSet->getUInt("lastCrawlingTime");
+        std::cout << std::endl << resultSet->getInt(1) << " " << domain << " " << url << " " << lastCrawlingTime << std::endl;
+        this->AddNew(Website(domain, url, lastCrawlingTime));
     }
-    catch (sql::SQLException& e)
-    {
-        std::cout << e.what() << std::endl;
-    }
-
 }
 
 // All websites getter
@@ -66,5 +40,5 @@ void WebsiteStore::AddNew(const Website& website)
 // Updates the website info
 void WebsiteStore::Update(const Website& website)
 {
-    all[website.GetHomepage()] = website;
+    DBConnector::ExecuteQuery("UPDATE Crawler.Websites SET lastCrawlingTime = current_timestamp() WHERE domain = '" + website.GetDomain() + "'" );
 }
