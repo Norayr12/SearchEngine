@@ -3,8 +3,10 @@
 //
 #include "DBConnector.hpp"
 
+// Idiotizm
 sql::Connection* DBConnector::connection;
 sql::Statement* DBConnector::statement;
+sql::PreparedStatement* DBConnector::preparedStatement;
 
 // Initialize connection with DB
 void DBConnector::Init(const std::string& host, const std::string& user, const std::string& password)
@@ -17,6 +19,7 @@ void DBConnector::Init(const std::string& host, const std::string& user, const s
 
         DBConnector::connection = con;
         DBConnector::statement = con->createStatement();
+
     }
     catch (sql::SQLException& e)
     {
@@ -35,6 +38,26 @@ sql::ResultSet* DBConnector::ExecuteQuery(const std::string& query)
     catch (sql::SQLException& e)
     {
         std::cout << "EXECUTE QUERY " << e.what() << std::endl;
+        return nullptr;
+    }
+}
+
+sql::ResultSet* DBConnector::ExecuteQuery(const std::string &query, std::vector <std::string>& values)
+{
+    try
+    {
+        DBConnector::preparedStatement = DBConnector::connection->prepareStatement(query);
+
+        for(int i = 0; i < values.size(); ++i)
+        {
+            DBConnector::preparedStatement->setString(i + 1, values[i]);
+        }
+
+        return DBConnector::preparedStatement->executeQuery();
+    }
+    catch(sql::SQLException& e)
+    {
+        std::cout << "PREPARED STATEMENT ERROR: " << e.what() << "\n";
         return nullptr;
     }
 

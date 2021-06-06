@@ -18,19 +18,17 @@ void DocumentStore::AddNewDocument(Document document)
     std::string data = document.GetAllText();
     std::string description = document.GetDescription();
 
-    std::string updateQuery = "UPDATE Crawler.Data SET title = '" + title + "', data = '" + data + "', description = '" + description + "' WHERE url = '" + url + "'";
+    std::vector<std::string> insertValues = {url, title, "'", description};
+    std::vector<std::string> updateValues = {title, data, description, url};
+
+    std::string updateQuery = "UPDATE Crawler.Data SET title = ?, data = ?, description = ? WHERE url = ?" ;
     try
     {
-        DBConnector::ExecuteQuery("INSERT INTO Crawler.Data values ( '" + url + "', '" + title + "', '" + data + "', '" + description + "' )");
+        DBConnector::ExecuteQuery("INSERT INTO Crawler.Data values (?, ?, ?, ?)", insertValues);
     }
     catch (sql::SQLException& e)
     {
         if(e.getErrorCode() == 1062 || e.getErrorCode() == 1061)
-            DBConnector::ExecuteQuery(updateQuery);
-        else
-        {
-
-        }
-            //std::cout << e.what() << "\n";
+            DBConnector::ExecuteQuery(updateQuery, updateValues);
     }
 }
