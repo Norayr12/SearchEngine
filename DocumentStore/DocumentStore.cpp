@@ -18,7 +18,7 @@ void DocumentStore::AddNewDocument(Document document)
     std::string data = document.GetAllText();
     std::string description = document.GetDescription();
 
-    std::vector<std::string> insertValues = {url, title, "'", description};
+    std::vector<std::string> insertValues = {url, title, data, description};
     std::vector<std::string> updateValues = {title, data, description, url};
 
     std::string updateQuery = "UPDATE Crawler.Data SET title = ?, data = ?, description = ? WHERE url = ?" ;
